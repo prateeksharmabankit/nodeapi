@@ -1,9 +1,25 @@
 const mongoose = require('mongoose');
-
+const Schema = mongoose.Schema;
 const dataSchema = new mongoose.Schema({
     name:{
         type: String
     },
+    
+
+
+    users:[{
+        user:{
+           
+            type: Schema.Types.ObjectId,
+            ref: "users"
+        },
+        
+        
+       
+    }], 
+
+   
+
     postId: {
        
         type: Number
@@ -37,7 +53,7 @@ latitude :{
       
         type: String
     },
-    Longitude: {
+    longitude: {
        
         type: String
     },
@@ -52,11 +68,30 @@ latitude :{
         type: String
     },
 
+    categoryId : {
+       
+        type: String
+    },
 
 
- categoryId :{
+
+ postViews :{
        
         type: Number
+    },
+
+    subCategories :{
+       
+        type: String
+    },
+    imageUrl :{
+       
+        type: String
+    },
+
+    dateTimeStamp :{
+       
+        type: String
     },
    
 })

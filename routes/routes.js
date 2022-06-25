@@ -1,12 +1,32 @@
+const { json } = require('express');
 const express = require('express');
 const Model = require('../models/model');
+const UserModel = require('../models/user');
 const router = express.Router();
-
+let ts = Date.now();
+function GetRandomId(min, max) {  
+    return Math.floor(
+      Math.random() * (max - min) + min
+    )
+  }
 //Post Method
 router.post('/post', async (req, res) => {
     const data = new Model({
-        name: req.body.name,
-        age: req.body.age
+        categoryId: req.body.categoryId,
+        postId:GetRandomId(10000,1000000),
+        title: req.body.title,
+        isAnonymous:req.body.isAnonymous,
+        postViews:req.body.postViews,
+        userId:req.body.userId,
+        latitude:req.body.latitude,
+        longitude:req.body.longitude,
+        postType:req.body.postType,
+        subCategories:req.body.subCategories,
+        categoryName:req.body.categoryName,
+        categoryId:req.body.categoryId,
+        dateTimeStamp:(Math.floor(ts/1000)),
+        imageUrl:req.body.imageUrl,
+
     })
 
     try {
@@ -20,13 +40,69 @@ router.post('/post', async (req, res) => {
 
 //Get all Method
 router.get('/getAll', async (req, res) => {
-    try {
-        const data = await Model.find();
-        res.json(data)
+    
+             
+
+        Model.aggregate([{
+            $lookup: {
+                from: "users", 
+                localField: "userId",
+                foreignField: "userId",
+                as: "users"
+            }
+            
+        }
+        ,
+        {
+          $unwind: '$users'
+        }
+    ]).exec(function(err, students) {
+            console.log(students);
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        
+        try {
+        const options = {
+            projection: { _id: 0, title: 1, userId: 1 },
+          };
+
+        const data = await Model.find(options);
+        const user =await  UserModel.findOne();
+      
+         
+        
+        data.forEach(element => {
+             
+           
+           
+              console.log(user.userId);
+            
+            
+           });
+       
+        res.status(200).json(data)
     }
     catch (error) {
         res.status(500).json({ message: error.message })
-    }
+    } */
+    res.status(500).json({ message: error.message });
 })
 
 //Get by ID Method
@@ -68,6 +144,70 @@ router.delete('/delete/:id', async (req, res) => {
     catch (error) {
         res.status(400).json({ message: error.message })
     }
+})
+//User Routes
+router.post('/user/post', async (req, res) => {
+    const data = new UserModel({
+        emailAddress: req.body.emailAddress,
+        userId:GetRandomId(10000,1000000),
+        name: req.body.name,
+        token:req.body.token,
+       
+    })
+
+    const user = await UserModel.find({
+        emailAddress: data.emailAddress,
+     
+      });
+      if(user.length==0)
+      {
+        const dataToSave = await data.save();
+         res.status(200).json(dataToSave)
+      }
+      else{
+
+        
+        res.status(200).json(user)
+      }
+
+
+    
+    const query = { emailAddress: data};
+    const update = { $set: {data}};
+    const options = { upsert: true };
+    UserModel.updateOne(query, update, options);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+        console.log(data);
+    //try {
+   
+
+    res.status(200).json(data)
+//     if(modelIfExist.toString()!=null)
+//     {
+//         const dataToSave = await data.save();
+//         res.status(200).json(dataToSave)
+//     }
+//         res.status(200).json(modelIfExist)
+//     }
+//     catch (error) {
+//         res.status(400).json({ message: error.message })
+//     }
+// 
 })
 
 module.exports = router;
