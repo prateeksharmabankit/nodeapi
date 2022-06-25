@@ -96,6 +96,10 @@ latitude :{
        
         type: Date
     },
+    distance :{
+       
+        type:mongoose.Types.Decimal128
+    },
    
 })
 

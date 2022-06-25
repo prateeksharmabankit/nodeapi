@@ -4,6 +4,7 @@ const { getDate } = require('javascript-time-ago/gradation');
 const Model = require('../models/model');
 const UserModel = require('../models/user');
 var moment = require('moment');
+var haversine = require("haversine-distance");
 
 const router = express.Router();
 let ts = Date.now();
@@ -11,6 +12,20 @@ function GetRandomId(min, max) {
     return Math.floor(
       Math.random() * (max - min) + min
     )
+  }
+  function GetDistance(lat1,long1,lat2,long2)
+  
+  {
+
+    var point1 = {lat: lat1,lng: long1}
+
+//Second point in your haversine calculation
+var point2 = {lat: lat2, lng:long2 }
+
+var haversine_m = haversine(point1, point2); //Results in meters (default)
+var haversine_km = haversine_m /1000; //Results in kilometers
+
+return haversine_km;
   }
 //Post Method
 router.post('/post', async (req, res) => {
@@ -73,11 +88,11 @@ router.get('/getAll', async (req, res) => {
         students.forEach( result => {
          
             result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+         result.distance=  GetDistance (result.latitude,result.longitude,28.7041,77.1025);
            
           });
-        
-        
-          //  console.log(  students);
+         
+            console.log(students );
 
             
             res.status(200).send(students)
