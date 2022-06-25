@@ -22,8 +22,8 @@ const routes = require('./routes/routes');
 
 app.use('/api', routes)
 
-app.listen(port = process.env.PORT, () => {
-    console.log(`Server Started at ${port}`)
+app.listen(3000, () => {
+   
 })
 
 /* app.listen(3000, () => {

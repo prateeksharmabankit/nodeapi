@@ -58,6 +58,7 @@ router.get('/getAll', async (req, res) => {
         }
     ]).exec(function(err, students) {
             console.log(students);
+            res.status(200).send(students)
         });
 
 
@@ -102,7 +103,8 @@ router.get('/getAll', async (req, res) => {
     catch (error) {
         res.status(500).json({ message: error.message })
     } */
-    res.status(500).json({ message: error.message });
+   
+
 })
 
 //Get by ID Method
