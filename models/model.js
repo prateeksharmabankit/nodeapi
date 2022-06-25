@@ -4,16 +4,16 @@ const dataSchema = new mongoose.Schema({
     name:{
         type: String
     },
-    PostId: {
+    postId: {
        
         type: Number
     },
 
- Title :{
+ title :{
        
         type: String
     },
-    IsAnonymous: {
+    isAnonymous: {
        
         type: Number
     },
@@ -21,11 +21,11 @@ const dataSchema = new mongoose.Schema({
 
 
 
- UserId :{
+ userId :{
         
         type: Number
     },
-    PostViews: {
+    postViews: {
        
         type: Number
     },
@@ -33,7 +33,7 @@ const dataSchema = new mongoose.Schema({
 
 
 
- Latitude :{
+latitude :{
       
         type: String
     },
@@ -43,18 +43,18 @@ const dataSchema = new mongoose.Schema({
     },
 
 
- PostType :{
+ postType :{
        
         type: Number
     },
-    CategoryName : {
+    categoryName : {
        
         type: String
     },
 
 
 
- CategoryId :{
+ categoryId :{
        
         type: Number
     },
