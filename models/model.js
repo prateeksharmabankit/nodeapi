@@ -4,6 +4,9 @@ const dataSchema = new mongoose.Schema({
     name:{
         type: String
     },
+    ago:{
+        type: String
+    },
     
 
 
@@ -91,7 +94,7 @@ latitude :{
 
     dateTimeStamp :{
        
-        type: String
+        type: Date
     },
    
 })

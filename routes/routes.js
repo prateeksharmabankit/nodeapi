@@ -1,7 +1,10 @@
 const { json } = require('express');
 const express = require('express');
+const { getDate } = require('javascript-time-ago/gradation');
 const Model = require('../models/model');
 const UserModel = require('../models/user');
+var moment = require('moment');
+
 const router = express.Router();
 let ts = Date.now();
 function GetRandomId(min, max) {  
@@ -24,7 +27,7 @@ router.post('/post', async (req, res) => {
         subCategories:req.body.subCategories,
         categoryName:req.body.categoryName,
         categoryId:req.body.categoryId,
-        dateTimeStamp:(Math.floor(ts/1000)),
+        dateTimeStamp:new Date(),
         imageUrl:req.body.imageUrl,
 
     })
@@ -43,7 +46,7 @@ router.get('/getAll', async (req, res) => {
     
              
 
-        Model.aggregate([{
+  var cur=  Model.aggregate([{
             $lookup: {
                 from: "users", 
                 localField: "userId",
@@ -57,7 +60,17 @@ router.get('/getAll', async (req, res) => {
           $unwind: '$users'
         }
     ]).exec(function(err, students) {
-            console.log(students);
+         
+        students.forEach( result => {
+         
+            result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+           
+          });
+        
+        
+            console.log(  students);
+
+            
             res.status(200).send(students)
         });
 
