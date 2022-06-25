@@ -46,7 +46,7 @@ router.get('/getAll', async (req, res) => {
     
              
 
-  var cur=  Model.aggregate([{
+  Model.aggregate([{
             $lookup: {
                 from: "users", 
                 localField: "userId",
@@ -54,11 +54,20 @@ router.get('/getAll', async (req, res) => {
                 as: "users"
             }
             
+           
+            
         }
         ,
         {
           $unwind: '$users'
         }
+        , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
+
+    "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
+    "subCategories":1,"dateTimeStamp":1,"users.name":1
+    
+    
+    } }
     ]).exec(function(err, students) {
          
         students.forEach( result => {
@@ -68,7 +77,7 @@ router.get('/getAll', async (req, res) => {
           });
         
         
-            console.log(  students);
+          //  console.log(  students);
 
             
             res.status(200).send(students)
