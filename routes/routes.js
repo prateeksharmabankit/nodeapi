@@ -71,8 +71,9 @@ router.post('/post', async (req, res) => {
 })
 
 //Get all Method
-router.get('/getAll', async (req, res) => {
+router.get('/getAll/:id', async (req, res) => {
     
+    console.log(req.params.id)
   Model.aggregate([{
             $lookup: {
                 from: "users", 
@@ -202,28 +203,9 @@ router.post('/user/post', async (req, res) => {
         const dataToSave = await data.save();
          res.status(200).json(dataToSave)
       }
-      else{
-
-        
+      else{        
         res.status(200).json(user)
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
        
 })
 
@@ -237,22 +219,16 @@ router.post('/likes/post', async (req, res) => {
         userId:req.body.userId
      
       });
-      console.log(source)
+    
  if (source==null) {
-    console.log("!exist")
-
     var user = new LikesModel(req.body)
-   
      await user.save();
-    res.status(200).json()
-
+    res.status(200).json("1")
  }
  else{
-    console.log("exist")
-   
-    const id = source._id;
+       const id = source._id;
         const data = await LikesModel.findByIdAndDelete(id)      
-    res.status(200).json(source)
+    res.status(200).json("0")
 
  }
    
