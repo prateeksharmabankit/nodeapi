@@ -5,7 +5,7 @@ const Model = require('../models/model');
 const UserModel = require('../models/user');
 var moment = require('moment');
 var haversine = require("haversine-distance");
-
+const LikesModel = require('../models/likes');
 const router = express.Router();
 let ts = Date.now();
 function GetRandomId(min, max) {  
@@ -209,12 +209,6 @@ router.post('/user/post', async (req, res) => {
       }
 
 
-    
-    const query = { emailAddress: data};
-    const update = { $set: {data}};
-    const options = { upsert: true };
-    UserModel.updateOne(query, update, options);
-
 
 
 
@@ -230,22 +224,38 @@ router.post('/user/post', async (req, res) => {
 
 
    
-        console.log(data);
-    //try {
-   
-
-    res.status(200).json(data)
-//     if(modelIfExist.toString()!=null)
-//     {
-//         const dataToSave = await data.save();
-//         res.status(200).json(dataToSave)
-//     }
-//         res.status(200).json(modelIfExist)
-//     }
-//     catch (error) {
-//         res.status(400).json({ message: error.message })
-//     }
-// 
+       
 })
+
+
+//likes Poutes
+
+router.post('/likes/post', async (req, res) => {
+   
+    const source = await LikesModel.findOne({
+        postId:  req.body.postId,
+        userId:req.body.userId
+     
+      });
+      console.log(source)
+ if (source==null) {
+    console.log("!exist")
+
+    var user = new LikesModel(req.body)
+   
+     await user.save();
+    res.status(200).json()
+
+ }
+ else{
+    console.log("exist")
+   
+    const id = source._id;
+        const data = await LikesModel.findByIdAndDelete(id)      
+    res.status(200).json(source)
+
+ }
+   
+});
 
 module.exports = router;
