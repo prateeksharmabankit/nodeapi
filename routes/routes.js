@@ -27,6 +27,20 @@ var haversine_km = haversine_m /1000; //Results in kilometers
 
 return haversine_km;
   }
+
+  Array.prototype.sortAttr = function(attr,reverse) {
+    var sorter = function(a,b) {
+      var aa = a[attr];
+      var bb = b[attr];
+      if(aa+0==aa && bb+0==bb) return aa-bb; // numbers
+      else return aa.localeCompare(bb); // strings
+    }
+    this.sort(function(a,b) {
+      var result = sorter(a,b);
+      if(reverse) result*= -1;
+      return result;
+    });
+  };
 //Post Method
 router.post('/post', async (req, res) => {
     const data = new Model({
@@ -59,42 +73,27 @@ router.post('/post', async (req, res) => {
 //Get all Method
 router.get('/getAll', async (req, res) => {
     
-             
-
   Model.aggregate([{
             $lookup: {
                 from: "users", 
                 localField: "userId",
                 foreignField: "userId",
                 as: "users"
-            }
-            
-           
-            
-        }
-        ,
+            }},
         {
           $unwind: '$users'
         }
         , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
 
     "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
-    "subCategories":1,"dateTimeStamp":1,"users.name":1
-    
-    
-    } }
+    "subCategories":1,"dateTimeStamp":1,"users.name":1} }
     ]).exec(function(err, students) {
          
-        students.forEach( result => {
-         
+            students.forEach( result => {
             result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
-         result.distance=  GetDistance (result.latitude,result.longitude,28.7041,77.1025);
-           
-          });
-         
+            result.distance=  GetDistance (result.latitude,result.longitude,28.7041,77.1025);});
+            students.sortAttr("distance")
             console.log(students );
-
-            
             res.status(200).send(students)
         });
 
