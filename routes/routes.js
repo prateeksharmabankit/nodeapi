@@ -86,7 +86,7 @@ var checkifLikesExist =async  function(postId, userId)
 
 }
 //Get all Method
-router.get('/posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) => {
+router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) => {
   Model.aggregate([{
             $lookup: {
                 from: "users", 
