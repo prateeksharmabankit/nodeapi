@@ -276,7 +276,7 @@ router.post('/user/post', async (req, res) => {
        
     })
 
-    const user = await UserModel.find({
+    const user = await UserModel.findOne({
         emailAddress: data.emailAddress,
      
       });
