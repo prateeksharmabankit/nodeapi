@@ -41,7 +41,20 @@ return haversine_km;
       return result;
     });
   };
-//Post Method
+  Array.prototype.sortAttrViews = function(attr,reverse) {
+    var sorter = function(a,b) {
+      var aa = a[attr];
+      var bb = b[attr];
+      if(aa+0==aa && bb+0==bb) return aa-bb; // numbers
+      else return aa.localeCompare(bb); // strings
+    }
+    this.sort(function(a,b) {
+      var result = sorter(b,a);
+      if(reverse) result*= -1;
+      return result;
+    });
+  };
+
 router.post('/post', async (req, res) => {
     const data = new Model({
         categoryId: req.body.categoryId,
@@ -69,23 +82,8 @@ router.post('/post', async (req, res) => {
         res.status(400).json({ message: error.message })
     }
 })
-var checkifLikesExist =async  function(postId, userId)
-{
-    const userNamePromise = new Promise((resolve, reject) => {
-        LikesModel.findOne({postId:postId,userId:userId}, function(err, user){
-          if (err) reject(err);
-          if (Boolean(user)) {
-           
-          resolve(true)
-          } else {
-              resolve(false);
-          }
-        });
-      })
-     
 
-}
-//Get all Method
+
 router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) => {
   Model.aggregate([{
             $lookup: {
@@ -160,12 +158,107 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
    
 
 })
+router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req, res) => {
+    Model.aggregate([{
+              $lookup: {
+                  from: "users", 
+                  localField: "userId",
+                  foreignField: "userId",
+                  as: "users"
+              },
+              
+          },
+              
+          {
+            $unwind: '$users'
+          }
+          , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
+  
+      "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
+      "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1} }
+      ]).exec(function(err, students) {
+           
+              students.forEach( result => {
+              result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+              result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
+             
+          });
+              students.sortAttrViews("postViews")
+              res.status(200).send(students)
+          });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+     
+  
+  })
+
+
+  router.get('/Posts/GetAllWhatisPosts/:userId/:latitude/:longitude', async (req, res) => {
+    Model.aggregate([
+        
+        { $match: { categoryId: "5" }},
+        {
+        
+              $lookup: {
+                  from: "users", 
+                  localField: "userId",
+                  foreignField: "userId",
+                  as: "users"
+              },
+              
+          },
+              
+          {
+            $unwind: '$users'
+          }
+          , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
+  
+      "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
+      "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1} }
+      ]).exec(function(err, students) {
+           
+              students.forEach( result => {
+              result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+              result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
+             
+          });
+              students.sortAttrViews("postViews")
+              res.status(200).send(students)
+          });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+     
+  
+  })
 
 //Get by ID Method
 router.get('/getOne/:id', async (req, res) => {
     try {
-        const data = await Model.findById(req.params.id);
-        res.json(data)
+        console.log(req.params.id)
+        const data = await Model.findOne(postId=req.params.id);
+        res.status(200).json(data)
     }
     catch (error) {
         res.status(500).json({ message: error.message })
@@ -173,21 +266,17 @@ router.get('/getOne/:id', async (req, res) => {
 })
 
 //Update by ID Method
-router.patch('/update/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const updatedData = req.body;
-        const options = { new: true };
+router.get('/Posts/AddPostView/:postId', async (req, res) => {
+    
+        Model.findOneAndUpdate( {postId: req.params.postId}, 
+            {$inc : {'postViews' : 1}}, 
+            {new: true}, 
+            function(err, response) { 
+                 // do something
+            });
+            res.status(200).json({ message:"1"})
+        
 
-        const result = await Model.findByIdAndUpdate(
-            id, updatedData, options
-        )
-
-        res.send(result)
-    }
-    catch (error) {
-        res.status(500).json({ message: error.message })
-    }
 })
 
 //Delete by ID Method
