@@ -316,6 +316,21 @@ router.post('/user/post', async (req, res) => {
 })
 
 
+router.get('/User/UpdateToken/:userId/:token', async (req, res) => {
+    
+    var myquery = { userId: req.params.userId };
+    var newvalues = { $set: {token: req.params.token} };
+    UserModel.findOneAndUpdate( myquery, 
+        newvalues, 
+        function(err, response) { 
+             // do something
+        });
+        res.status(200).send({ message:"1"})
+    
+
+})
+
+
 //likes Poutes
 
 router.post('/likes/post', async (req, res) => {
