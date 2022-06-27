@@ -6,6 +6,8 @@ const UserModel = require('../models/user');
 var moment = require('moment');
 var haversine = require("haversine-distance");
 const LikesModel = require('../models/likes');
+
+const SubCategoryModel = require('../models/subcategories');
 const router = express.Router();
 let ts = Date.now();
 function GetRandomId(min, max) {  
@@ -253,17 +255,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
   
   })
 
-//Get by ID Method
-router.get('/getOne/:id', async (req, res) => {
-    try {
-        console.log(req.params.id)
-        const data = await Model.findOne(postId=req.params.id);
-        res.status(200).json(data)
-    }
-    catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-})
+
 
 //Update by ID Method
 router.get('/Posts/AddPostView/:postId', async (req, res) => {
@@ -355,4 +347,27 @@ router.post('/likes/post', async (req, res) => {
    
 });
 
+//SubCategories
+
+
+router.get('/getSubCategories/:categoryId', async (req, res) => {
+  try{
+      const data = await SubCategoryModel.find({categoryId:req.params.categoryId});
+      res.json(data)
+  }
+  catch(error){
+      res.status(500).json({message: error.message})
+  }
+})
+
+router.post('/subCategories/post', async (req, res) => {
+   
+    var user = new SubCategoryModel(req.body)
+    await user.save();
+   res.status(200).json("1") 
+ 
+
+ 
+   
+});
 module.exports = router;
