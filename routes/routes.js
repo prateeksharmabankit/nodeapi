@@ -231,7 +231,24 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
      
   
   })
-
+  router.get('/getPostLike/:postId', async (req, res) => {
+    try{
+    
+        const data = await Model.findOne({postId:req.params.postId});
+       if(data==null)
+       {
+        res.json(success("Ok", { data:0}, res.statusCode))
+       }
+       else
+       {
+        res.json(success("Ok", { data:1}, res.statusCode))
+       }
+       
+    }
+    catch(errors){
+        res.json(error("Something went wrong", res.statusCode))
+    }
+  })
 
 
 //Update by ID Method
@@ -291,7 +308,7 @@ router.get('/User/UpdateToken/:userId/:token', async (req, res) => {
 })
 
 
-//likes Poutes
+//likes Routes
 
 router.post('/likes/post', async (req, res) => {
    
@@ -303,13 +320,14 @@ router.post('/likes/post', async (req, res) => {
     
  if (source==null) {
     var user = new LikesModel(req.body)
+    user.subCategoryId=GetRandomId(10000,1000000),
      await user.save();
      res.json(success("Liked Successfully", { data: "1"}, res.statusCode))
  }
  else{
        const id = source._id;
         const data = await LikesModel.findByIdAndDelete(id)      
-        res.json(success("Unliked Liked Successfully", { data: "1"}, res.statusCode))
+        res.json(success("Unliked Liked Successfully", { data: "0"}, res.statusCode))
 
  }
    
@@ -334,7 +352,7 @@ router.post('/subCategories/post', async (req, res) => {
    
     var user = new SubCategoryModel(req.body)
     await user.save();
-   res.status(200).json("1") 
+    res.json(success("OsubCategories Added", { data: "1"}, res.statusCode))
  
 
  
