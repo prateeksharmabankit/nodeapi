@@ -15,7 +15,7 @@
     "haversine-distance": "^1.2.1",
     "javascript-time-ago": "^2.5.4",
     "moment": "^2.29.3",
-    "mongoose": "^6.2.2",
+    "mongoose": "^5.13.8",
     "nodemon": "^2.0.15"
   }
 }

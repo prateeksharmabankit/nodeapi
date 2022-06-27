@@ -20,10 +20,15 @@ const dataSchema = new mongoose.Schema({
         
        
     }], 
+   
 
    
 
     postId: {
+       
+        type: Number
+    },
+    isLiked: {
        
         type: Number
     },
