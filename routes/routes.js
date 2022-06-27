@@ -9,6 +9,7 @@ const LikesModel = require('../models/likes');
 
 const SubCategoryModel = require('../models/subcategories');
 const router = express.Router();
+const { success, error, validation } = require("./responseApi");
 let ts = Date.now();
 function GetRandomId(min, max) {  
     return Math.floor(
@@ -112,7 +113,8 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
            
         });
             students.sortAttr("distance")
-            res.status(200).send(students)
+            res.json(success("OK", { data: students}, res.statusCode))
+           
         });
 
 
@@ -131,32 +133,7 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
 
 
 
-        /*
-        
-        try {
-        const options = {
-            projection: { _id: 0, title: 1, userId: 1 },
-          };
-
-        const data = await Model.find(options);
-        const user =await  UserModel.findOne();
       
-         
-        
-        data.forEach(element => {
-             
-           
-           
-              console.log(user.userId);
-            
-            
-           });
-       
-        res.status(200).json(data)
-    }
-    catch (error) {
-        res.status(500).json({ message: error.message })
-    } */
    
 
 })
@@ -186,7 +163,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
              
           });
               students.sortAttrViews("postViews")
-              res.status(200).send(students)
+              res.json(success("OK", { data: students}, res.statusCode))
           });
   
   
@@ -236,7 +213,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
              
           });
               students.sortAttrViews("postViews")
-              res.status(200).send(students)
+              res.json(success("OK", { data: students}, res.statusCode))
           });
   
   
@@ -266,22 +243,12 @@ router.get('/Posts/AddPostView/:postId', async (req, res) => {
             function(err, response) { 
                  // do something
             });
-            res.status(200).json({ message:"1"})
+            res.json(success("View Added ", { data: null}, res.statusCode))
         
 
 })
 
-//Delete by ID Method
-router.delete('/delete/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const data = await Model.findByIdAndDelete(id)
-        res.send(`Document with ${data.name} has been deleted..`)
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-})
+
 //User Routes
 router.post('/user/post', async (req, res) => {
     const data = new UserModel({
@@ -299,10 +266,11 @@ router.post('/user/post', async (req, res) => {
       if(user.length==0)
       {
         const dataToSave = await data.save();
-         res.status(200).json(dataToSave)
+       
+         res.json(success("User Added SuccessFully", { data: dataToSave}, res.statusCode))
       }
       else{        
-        res.status(200).json(user)
+        res.json(success("User Added SuccessFully", { data: user}, res.statusCode))
       }
        
 })
@@ -317,7 +285,7 @@ router.get('/User/UpdateToken/:userId/:token', async (req, res) => {
         function(err, response) { 
              // do something
         });
-        res.status(200).send({ message:"1"})
+          res.json(success("User Token Updated", { data: "1"}, res.statusCode))
     
 
 })
@@ -336,12 +304,12 @@ router.post('/likes/post', async (req, res) => {
  if (source==null) {
     var user = new LikesModel(req.body)
      await user.save();
-    res.status(200).json("1")
+     res.json(success("Liked Successfully", { data: "1"}, res.statusCode))
  }
  else{
        const id = source._id;
         const data = await LikesModel.findByIdAndDelete(id)      
-    res.status(200).json("0")
+        res.json(success("Unliked Liked Successfully", { data: "1"}, res.statusCode))
 
  }
    
@@ -352,11 +320,13 @@ router.post('/likes/post', async (req, res) => {
 
 router.get('/getSubCategories/:categoryId', async (req, res) => {
   try{
+  
       const data = await SubCategoryModel.find({categoryId:req.params.categoryId});
-      res.json(data)
+     
+      res.json(success("Ok", { data: data}, res.statusCode))
   }
-  catch(error){
-      res.status(500).json({message: error.message})
+  catch(errors){
+      res.json(error("Something went wrong", res.statusCode))
   }
 })
 
