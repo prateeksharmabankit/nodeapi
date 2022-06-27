@@ -280,7 +280,7 @@ router.post('/user/post', async (req, res) => {
         emailAddress: data.emailAddress,
      
       });
-      if(user.length==0)
+      if(user==null ||user.length==0)
       {
         const dataToSave = await data.save();
        
