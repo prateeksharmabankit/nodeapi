@@ -25,7 +25,3 @@ app.use('/api', routes)
 app.listen(port = process.env.PORT, () => {
     console.log(`Server Started at ${3000}`)
 })
-
-/* app.listen(3000, () => {
-    console.log(`Server Started at ${3000}`)
-}) */
