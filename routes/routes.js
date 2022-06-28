@@ -104,7 +104,7 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
         , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
 
     "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
-    "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1} }
+    "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1,"imageUrl":1} }
     ]).exec(function(err, students) {
          
             students.forEach( result => {
@@ -154,7 +154,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
           , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
   
       "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
-      "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1} }
+      "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1,"imageUrl":1} }
       ]).exec(function(err, students) {
            
               students.forEach( result => {
@@ -204,7 +204,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
           , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
   
       "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
-      "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1} }
+      "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1,"imageUrl":1} }
       ]).exec(function(err, students) {
            
               students.forEach( result => {
