@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const mongoString = process.env.DATABASE_URL;
 
-mongoose.connect(mongoString);
+mongoose.connect(mongoString,{ poolSize: 10 });
 const database = mongoose.connection;
 
 database.on('error', (error) => {
