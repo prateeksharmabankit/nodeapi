@@ -72,7 +72,7 @@ router.post('/post', async (req, res) => {
         subCategories:req.body.subCategories,
         categoryName:req.body.categoryName,
         categoryId:req.body.categoryId,
-        dateTimeStamp:new Date(),
+        dateTimeStamp:Date.now(),
         imageUrl:req.body.imageUrl,
 
     })
@@ -108,7 +108,9 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
     ]).exec(function(err, students) {
          
             students.forEach( result => {
-            result.ago=moment(students.dateTimeStamp, "YYYY-MM-DD HH:mm:ss").fromNow();
+              const unixTime = result.dateTimeStamp;
+              const date = new Date(unixTime*1000);
+            result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
             result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
            
         });
