@@ -234,7 +234,8 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
   router.get('/getPostLike/:postId/:userId', async (req, res) => {
     try{
     
-        const data = await Model.findOne({postId:req.params.postId,userId:req.params.userId});
+        const data = await LikesModel.findOne({postId:req.params.postId,userId:req.params.userId});
+        console.log(req.params.postId,req.params.userId)
        if(data==null)
        {
         res.json(success("Ok", { data:0}, res.statusCode))
