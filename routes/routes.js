@@ -64,7 +64,7 @@ router.post('/post', async (req, res) => {
         postId:GetRandomId(10000,1000000),
         title: req.body.title,
         isAnonymous:req.body.isAnonymous,
-        postViews:req.body.postViews,
+        postViews:0,
         userId:req.body.userId,
         latitude:req.body.latitude,
         longitude:req.body.longitude,
@@ -76,6 +76,7 @@ router.post('/post', async (req, res) => {
         imageUrl:req.body.imageUrl,
 
     })
+    delete data.users;
 
     try {
         const dataToSave = await data.save();
