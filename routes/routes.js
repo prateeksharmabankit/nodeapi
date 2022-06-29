@@ -72,7 +72,7 @@ router.post('/post', async (req, res) => {
         subCategories:req.body.subCategories,
         categoryName:req.body.categoryName,
         categoryId:req.body.categoryId,
-        dateTimeStamp:Date.now(),
+        dateTimeStamp:new Date(),
         imageUrl:req.body.imageUrl,
 
     })
