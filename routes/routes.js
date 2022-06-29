@@ -76,6 +76,7 @@ router.post('/post', async (req, res) => {
         imageUrl:req.body.imageUrl,
 
     })
+   
 
     try {
         const dataToSave = await data.save();
