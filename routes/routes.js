@@ -76,7 +76,6 @@ router.post('/post', async (req, res) => {
         imageUrl:req.body.imageUrl,
 
     })
-    delete data.users;
 
     try {
         const dataToSave = await data.save();
@@ -109,7 +108,7 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
     ]).exec(function(err, students) {
          
             students.forEach( result => {
-            result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+            result.ago=moment(students.dateTimeStamp, "YYYY-MM-DD HH:mm:ss").fromNow();
             result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
            
         });
