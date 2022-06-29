@@ -328,7 +328,7 @@ router.post('/likes/post', async (req, res) => {
  else{
        const id = source._id;
         const data = await LikesModel.findByIdAndDelete(id)      
-        res.json(success("Unliked Liked Successfully", { data: "0"}, res.statusCode))
+        res.json(success("Unliked", { data: "0"}, res.statusCode))
 
  }
    
