@@ -231,10 +231,10 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
      
   
   })
-  router.get('/getPostLike/:postId', async (req, res) => {
+  router.get('/getPostLike/:postId/:userId', async (req, res) => {
     try{
     
-        const data = await Model.findOne({postId:req.params.postId});
+        const data = await Model.findOne({postId:req.params.postId,userId:req.params.userId});
        if(data==null)
        {
         res.json(success("Ok", { data:0}, res.statusCode))
