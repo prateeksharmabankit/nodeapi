@@ -6,10 +6,16 @@ const UserModel = require('../models/user');
 var moment = require('moment');
 var haversine = require("haversine-distance");
 const LikesModel = require('../models/likes');
-
+const multer = require('multer');
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage });
 const SubCategoryModel = require('../models/subcategories');
 const router = express.Router();
+var fs = require('fs');
+
+
 const { success, error, validation } = require("./responseApi");
+
 let ts = Date.now();
 function GetRandomId(min, max) {  
     return Math.floor(
@@ -338,12 +344,59 @@ router.post('/likes/post', async (req, res) => {
 });
 
 //SubCategories
+router.post('/upload_gambar', upload.single('file'),(req, res) => {
+  /* const stream = getStream(req.file.buffer);
+ console.log(stream) */
+ 
+/*   
+  var stream = fs.createReadStream(buf).pipe(res);
+  const { BlockBlobClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
+
+const blobUrl = "https://poacdocreport.blob.core.windows.net/reports/reports";
+
+const blockBlobClient = new BlockBlobClient(
+  blobUrl,
+  new StorageSharedKeyCredential("poacdocreport", "EP8FxGYIqd4Z8qEqypUNrNcz65IPisC7lXDV7Qi8jyQkfIn4Vk3g+4fX01fVD+CmmtwpWRsKSM/Hn2hcJ35iNg==")
+);
+
+
+
+ blockBlobClient.uploadFile(stream); */
+  
+
+  
+})
 
 
 router.get('/getSubCategories/:categoryId', async (req, res) => {
+
+
+  
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   try{
   
       const data = await SubCategoryModel.find({categoryId:req.params.categoryId});
+      
      
       res.json(success("Ok", { data: data}, res.statusCode))
   }
@@ -354,10 +407,11 @@ router.get('/getSubCategories/:categoryId', async (req, res) => {
 
 router.post('/subCategories/post', async (req, res) => {
    
+  
     var user = new SubCategoryModel(req.body)
     await user.save();
     res.json(success("OsubCategories Added", { data: "1"}, res.statusCode))
- 
+   
 
  
    

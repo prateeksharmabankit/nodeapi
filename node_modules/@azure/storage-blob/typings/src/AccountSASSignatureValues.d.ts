@@ -1,0 +1,96 @@
+import { SharedKeyCredential } from "./credentials/SharedKeyCredential";
+import { IPRange } from "./IPRange";
+import { SASProtocol, SASQueryParameters } from "./SASQueryParameters";
+/**
+ * ONLY AVAILABLE IN NODE.JS RUNTIME.
+ *
+ * AccountSASSignatureValues is used to generate a Shared Access Signature (SAS) for an Azure Storage account. Once
+ * all the values here are set appropriately, call generateSASQueryParameters() to obtain a representation of the SAS
+ * which can actually be applied to blob urls. Note: that both this class and {@link SASQueryParameters} exist because
+ * the former is mutable and a logical representation while the latter is immutable and used to generate actual REST
+ * requests.
+ *
+ * @see https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
+ * for more conceptual information on SAS
+ *
+ * @see https://docs.microsoft.com/en-us/rest/api/storageservices/constructing-an-account-sas
+ * for descriptions of the parameters, including which are required
+ *
+ * @export
+ * @class AccountSASSignatureValues
+ */
+export interface AccountSASSignatureValues {
+    /**
+     * If not provided, this defaults to the service version targeted by this version of the library.
+     *
+     * @type {string}
+     * @memberof AccountSASSignatureValues
+     */
+    version?: string;
+    /**
+     * Optional. SAS protocols allowed.
+     *
+     * @type {SASProtocol}
+     * @memberof AccountSASSignatureValues
+     */
+    protocol?: SASProtocol;
+    /**
+     * Optional. When the SAS will take effect.
+     *
+     * @type {Date}
+     * @memberof AccountSASSignatureValues
+     */
+    startTime?: Date;
+    /**
+     * The time after which the SAS will no longer work.
+     *
+     * @type {Date}
+     * @memberof AccountSASSignatureValues
+     */
+    expiryTime: Date;
+    /**
+     * Specifies which operations the SAS user may perform. Please refer to {@link AccountSASPermissions} for help
+     * constructing the permissions string.
+     *
+     * @type {string}
+     * @memberof AccountSASSignatureValues
+     */
+    permissions: string;
+    /**
+     * Optional. IP range allowed.
+     *
+     * @type {IPRange}
+     * @memberof AccountSASSignatureValues
+     */
+    ipRange?: IPRange;
+    /**
+     * The values that indicate the services accessible with this SAS. Please refer to {@link AccountSASServices} to
+     * construct this value.
+     *
+     * @type {string}
+     * @memberof AccountSASSignatureValues
+     */
+    services: string;
+    /**
+     * The values that indicate the resource types accessible with this SAS. Please refer
+     * to {@link AccountSASResourceTypes} to construct this value.
+     *
+     * @type {string}
+     * @memberof AccountSASSignatureValues
+     */
+    resourceTypes: string;
+}
+/**
+ * ONLY AVAILABLE IN NODE.JS RUNTIME.
+ *
+ * Generates a {@link SASQueryParameters} object which contains all SAS query parameters needed to make an actual
+ * REST request.
+ *
+ * @see https://docs.microsoft.com/en-us/rest/api/storageservices/constructing-an-account-sas
+ *
+ * @param {SharedKeyCredential} sharedKeyCredential
+ * @returns {SASQueryParameters}
+ * @memberof AccountSASSignatureValues
+ */
+export declare function generateAccountSASQueryParameters(accountSASSignatureValues: AccountSASSignatureValues, sharedKeyCredential: SharedKeyCredential): SASQueryParameters;
+//# sourceMappingURL=AccountSASSignatureValues.d.ts.map
