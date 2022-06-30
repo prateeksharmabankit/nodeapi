@@ -268,10 +268,11 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
   
   })
   router.get('/Posts/GetPost/:userId/:postId', async (req, res) => {
-    console.log(req.params.postId)
+   
+    const posts=req.params.postId
     Model.aggregate([
         
-        { $match: { postId: req.params.postId }},
+        { $match: { postId: Number(posts)}},
         {
         
               $lookup: {
@@ -294,7 +295,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
            
               students.forEach( result => {
               result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
-              result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
+           
              
           });
               res.json(success("OK", { data: students}, res.statusCode))
