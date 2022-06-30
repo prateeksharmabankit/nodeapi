@@ -15,6 +15,8 @@ var fs = require('fs');
 var fcm = require('fcm-notification');
 
 
+var FCM = new fcm('./nearwe-db88e-firebase-adminsdk-92i06-7d33a51877.json');
+
 const { success, error, validation } = require("./responseApi");
 
 let ts = Date.now();
@@ -87,17 +89,18 @@ router.post('/post', async (req, res) => {
 
     try {
         const dataToSave = await data.save();
+        res.json(success("Post saved", { data: null}, res.statusCode))
         var Tokens = [ 'eaS5DaueRxiaN_Clp8xZPQ:APA91bFqoA3kwJCffFCFR93mpsb8pNXbWbUoB0zeYIV7EwFWUzK8O9eOueoLfm0-x8bP2TBq2dSsTOTEw-7jiK8FY9egb3U8x6LZmblQc9_ZIZGrspLwlI1sC1vZZzlRrVX_dEq90_Nu',];
-var FCM = new fcm('./nearwe-db88e-firebase-adminsdk-92i06-7d33a51877.json');
+
  
 var message = {
   data: {
-    score: '850',
-    time: '2:45'
+    postId: dataToSave.postId.toString()
+    
   },
   notification:{
-    title : 'Navish',
-    body : 'Test message by navish'
+    title : data.postType==1?"Genaral question asked":data.postType==2?"Nearby help":"Urgent Help needed",
+    body : data.title
   }
 };
 FCM.sendToMultipleToken(message, Tokens, function(err, response) {
@@ -108,7 +111,7 @@ FCM.sendToMultipleToken(message, Tokens, function(err, response) {
     }
  
 })
-        res.status(200).json(dataToSave)
+       
     }
     catch (error) {
         res.status(400).json({ message: error.message })
@@ -168,6 +171,7 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
    
 
 })
+
 router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req, res) => {
     Model.aggregate([{
               $lookup: {
@@ -244,6 +248,54 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
              
           });
               students.sortAttrViews("postViews")
+              res.json(success("OK", { data: students}, res.statusCode))
+          });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+     
+  
+  })
+  router.get('/Posts/GetPost/:userId/:postId', async (req, res) => {
+    console.log(req.params.postId)
+    Model.aggregate([
+        
+        { $match: { postId: 844621 }},
+        {
+        
+              $lookup: {
+                  from: "users", 
+                  localField: "userId",
+                  foreignField: "userId",
+                  as: "users"
+              },
+              
+          },
+              
+          {
+            $unwind: '$users'
+          }
+          , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
+  
+      "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
+      "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1,"imageUrl":1} }
+      ]).exec(function(err, students) {
+           
+              students.forEach( result => {
+              result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+              result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
+             
+          });
               res.json(success("OK", { data: students}, res.statusCode))
           });
   
