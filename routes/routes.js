@@ -68,7 +68,7 @@ return haversine_km;
   };
 
 router.post('/post', async (req, res) => {
-    const data = new Model({
+    const posts = new Model({
         categoryId: req.body.categoryId,
         postId:GetRandomId(10000,1000000),
         title: req.body.title,
@@ -88,21 +88,22 @@ router.post('/post', async (req, res) => {
    
 
     try {
-        const dataToSave = await data.save();
+        const dataToSave = await posts.save();
         res.json(success("Post saved", { data: null}, res.statusCode))
         var Tokens = [ 'eaS5DaueRxiaN_Clp8xZPQ:APA91bFqoA3kwJCffFCFR93mpsb8pNXbWbUoB0zeYIV7EwFWUzK8O9eOueoLfm0-x8bP2TBq2dSsTOTEw-7jiK8FY9egb3U8x6LZmblQc9_ZIZGrspLwlI1sC1vZZzlRrVX_dEq90_Nu',];
 
  
 var message = {
   data: {
-    postId: dataToSave.postId.toString()
+    postId: dataToSave.postId.toString(),
+    title : dataToSave.postType==1?"Genaral question asked":dataToSave.postType==2?"Nearby help":"Urgent Help needed",
+    desc : dataToSave.title
+    
     
   },
-  notification:{
-    title : data.postType==1?"Genaral question asked":data.postType==2?"Nearby help":"Urgent Help needed",
-    body : data.title
-  }
+ 
 };
+
 FCM.sendToMultipleToken(message, Tokens, function(err, response) {
     if(err){
         console.log('err--', err);
@@ -270,7 +271,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
     console.log(req.params.postId)
     Model.aggregate([
         
-        { $match: { postId: 844621 }},
+        { $match: { postId: req.params.postId }},
         {
         
               $lookup: {
