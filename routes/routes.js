@@ -12,6 +12,7 @@ const upload = multer({ storage: storage });
 const SubCategoryModel = require('../models/subcategories');
 const router = express.Router();
 var fs = require('fs');
+var fcm = require('fcm-notification');
 
 
 const { success, error, validation } = require("./responseApi");
@@ -86,6 +87,27 @@ router.post('/post', async (req, res) => {
 
     try {
         const dataToSave = await data.save();
+        var Tokens = [ 'eaS5DaueRxiaN_Clp8xZPQ:APA91bFqoA3kwJCffFCFR93mpsb8pNXbWbUoB0zeYIV7EwFWUzK8O9eOueoLfm0-x8bP2TBq2dSsTOTEw-7jiK8FY9egb3U8x6LZmblQc9_ZIZGrspLwlI1sC1vZZzlRrVX_dEq90_Nu',];
+var FCM = new fcm('./nearwe-db88e-firebase-adminsdk-92i06-7d33a51877.json');
+ 
+var message = {
+  data: {
+    score: '850',
+    time: '2:45'
+  },
+  notification:{
+    title : 'Navish',
+    body : 'Test message by navish'
+  }
+};
+FCM.sendToMultipleToken(message, Tokens, function(err, response) {
+    if(err){
+        console.log('err--', err);
+    }else {
+        console.log('response-----', response);
+    }
+ 
+})
         res.status(200).json(dataToSave)
     }
     catch (error) {
