@@ -196,7 +196,9 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
       ]).exec(function(err, students) {
            
               students.forEach( result => {
-              result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+                const unixTime = result.dateTimeStamp;
+                const date = new Date(unixTime*1000);
+              result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
               result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
              
           });
@@ -246,7 +248,9 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
       ]).exec(function(err, students) {
            
               students.forEach( result => {
-              result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+                const unixTime = result.dateTimeStamp;
+                const date = new Date(unixTime*1000);
+              result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
               result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
              
           });
@@ -296,7 +300,9 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
       ]).exec(function(err, students) {
            
               students.forEach( result => {
-              result.ago=moment(new Date(), "YYYY-MM-DD HH:mm:ss").fromNow();
+                const unixTime = result.dateTimeStamp;
+                const date = new Date(unixTime*1000);
+              result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
            
              
           });
