@@ -80,7 +80,7 @@ router.post('/post', async (req, res) => {
         postType:req.body.postType,
         subCategories:req.body.subCategories,
         categoryName:req.body.categoryName,
-        categoryId:req.body.categoryId,
+      
         dateTimeStamp:new Date(),
         imageUrl:req.body.imageUrl,
 
@@ -97,7 +97,9 @@ var message = {
   data: {
     postId: dataToSave.postId.toString(),
     title : dataToSave.postType==1?"Genaral question asked":dataToSave.postType==2?"Nearby help":"Urgent Help needed",
-    desc : dataToSave.title
+    desc : dataToSave.title,
+    type:dataToSave.categoryId,
+    imgUrl:dataToSave.imageUrl
     
     
   },
