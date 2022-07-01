@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     emailAddress:{
         type: String
     },
-    token: {
+    token: { 
        
         type: String
     },
