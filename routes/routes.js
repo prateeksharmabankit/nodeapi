@@ -136,7 +136,7 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
         {
           $unwind: '$users'
         }
-        , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
+        , { $project: { _id: 0, "users.userId": 1, "users.image": 1,"postId":1,"title":1,"isAnonymous":1,
 
     "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
     "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1,"imageUrl":1} }
@@ -189,7 +189,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
           {
             $unwind: '$users'
           }
-          , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
+          , { $project: { _id: 0, "users.image": 1,"users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
   
       "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
       "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1,"imageUrl":1} }
@@ -239,7 +239,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
           {
             $unwind: '$users'
           }
-          , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
+          , { $project: { _id: 0, "users.userId": 1,"users.image": 1,"postId":1,"title":1,"isAnonymous":1,
   
       "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
       "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1,"imageUrl":1} }
@@ -289,7 +289,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
           {
             $unwind: '$users'
           }
-          , { $project: { _id: 0, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
+          , { $project: { _id: 0,"users.image": 1, "users.userId": 1,"postId":1,"title":1,"isAnonymous":1,
   
       "postViews":1,  "latitude":1,  "longitude":1,"postType":1,"categoryName":1,
       "subCategories":1,"dateTimeStamp":1,"users.name":1,"isLiked":1,"imageUrl":1} }
@@ -361,6 +361,7 @@ router.post('/user/post', async (req, res) => {
         userId:GetRandomId(10000,1000000),
         name: req.body.name,
         token:req.body.token,
+        image:req.body.image
        
     })
 
