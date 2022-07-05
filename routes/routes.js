@@ -19,7 +19,7 @@ var upload = multer({
     key: 'EP8FxGYIqd4Z8qEqypUNrNcz65IPisC7lXDV7Qi8jyQkfIn4Vk3g+4fX01fVD+CmmtwpWRsKSM/Hn2hcJ35iNg==', //A key listed under Access keys in the storage account pane
     container: 'reports',  //Any container name, it will be created if it doesn't exist
     blobPathResolver: function(req, file, callback){
-      var blobPath ="a.jpg"
+      var blobPath =GetRandomId(1080,800000)+".png"
       callback(null, blobPath);
     }
   })
@@ -437,9 +437,28 @@ router.post('/likes/post', async (req, res) => {
 
 
 
-router.post('/upload_gambar', upload.any(), function (req, res, next) {
-  console.log(req.files)
-  res.status(200).send('Uploaded: ' + req.files)
+router.post('/AddWhatIsPost', upload.single("file"), async function (req, res, next) {
+  console.log(req.file)
+  const posts = new Model({
+    categoryId: req.body.categoryId,
+    postId:GetRandomId(10000,1000000),
+    title: req.body.title,
+    isAnonymous:req.body.isAnonymous,
+    postViews:0,
+    userId:req.body.userId,
+    latitude:req.body.latitude,
+    longitude:req.body.longitude,
+    postType:req.body.postType,
+    subCategories:req.body.subCategories,
+    categoryName:req.body.categoryName,
+  
+    dateTimeStamp:new Date(),
+    imageUrl:req.file.url,
+
+})
+const dataToSave = await posts.save();
+        res.json(success("Post saved", { data: null}, res.statusCode))
+ 
 })
 
 router.get('/getSubCategories/:categoryId', async (req, res) => {
