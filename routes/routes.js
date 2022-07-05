@@ -93,39 +93,61 @@ router.post('/post', async (req, res) => {
 
     })
    
+   
+    
 
-    try {
+     try {
+    
+       
+       
         const dataToSave = await posts.save();
-        res.json(success("Post saved", { data: null}, res.statusCode))
-        var Tokens = [ 'doqMIRNVQRuhdrx6p_DUIJ:APA91bHWNu4mmcJXRiLcbE9SS9chARD_LY_l0ERDuYT1hE_0vx7tsvlpvL32sEwI5Vq08s4hJSxKfN8Enf_Mrg6tKC4LuuFIpiO2aOt8l4LLyTKsVzlzoX-RlV3VQExHIl6s6ykAdFLF',];
 
- 
-var message = {
-  data: {
-    postId: dataToSave.postId.toString(),
-    title : dataToSave.postType==1?"Genaral question asked":dataToSave.postType==2?"Nearby help":"Urgent Help needed",
-    desc : dataToSave.title,
-    type:dataToSave.categoryId,
-    imgUrl:dataToSave.imageUrl
-    
-    
-  },
- 
-};
+var userTokens = [];
 
-FCM.sendToMultipleToken(message, Tokens, function(err, response) {
-    if(err){
-        console.log('err--', err);
-    }else {
-        console.log('response-----', response);
-    }
- 
-})
+await UserModel.find({},{"token": 1, "_id": 0}).exec(function(err, result) {
+   if (err) throw err;
+   result.forEach( results => {
+   
+     if(typeof results.token === 'undefined'){
+       //Variable isn't defined
+       }
+       else
+       {
+        var message = {
+          data: {
+            postId: dataToSave.postId.toString(),
+            title : dataToSave.postType==1?"Genaral question asked":dataToSave.postType==2?"Nearby help":"Urgent Help needed",
+            desc : dataToSave.title,
+            type:dataToSave.categoryId,
+            imgUrl:''
+            
+            
+          },
+          
+         
+        };
+         userTokens.push(results.token)
+         FCM.sendToMultipleToken(message, userTokens, function(err, response) {
+          if(err){
+              console.log('err--', err);
+          }else {
+              console.log('response-----', response);
+          }
+       
+      })
+         
+       }
+});
+
+ });
+
        
     }
     catch (error) {
-        res.status(400).json({ message: error.message })
-    }
+       
+    } 
+ 
+    res.json(success("Post saved", { data: "0"}, res.statusCode))
 })
 
 
@@ -163,24 +185,7 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-   
-
-})
+});
 
 router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req, res) => {
     Model.aggregate([{
@@ -212,22 +217,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
               students.sortAttrViews("postViews")
               res.json(success("OK", { data: students}, res.statusCode))
           });
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-     
-  
-  })
+  });
 
 
   router.get('/Posts/GetAllWhatisPosts/:userId/:latitude/:longitude', async (req, res) => {
@@ -264,21 +254,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
               students.sortAttrViews("postViews")
               res.json(success("OK", { data: students}, res.statusCode))
           });
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-     
-  
+
   })
   router.get('/Posts/GetPost/:userId/:postId', async (req, res) => {
    
@@ -315,20 +291,6 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
           });
               res.json(success("OK", { data: students}, res.statusCode))
           });
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-     
   
   })
   router.get('/getPostLike/:postId/:userId', async (req, res) => {
