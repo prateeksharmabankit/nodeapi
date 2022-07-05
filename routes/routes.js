@@ -449,6 +449,7 @@ if(typeof results.token === 'undefined'){
    
   };
    userTokens.push(results.token)
+   console.log(message)
    FCM.sendToMultipleToken(message, userTokens, function(err, response) {
     if(err){
       //  console.log('err--', err);
