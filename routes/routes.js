@@ -6,18 +6,25 @@ const UserModel = require('../models/user');
 var moment = require('moment');
 var haversine = require("haversine-distance");
 const LikesModel = require('../models/likes');
-const multer = require('multer');
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage });
 const SubCategoryModel = require('../models/subcategories');
 const router = express.Router();
-var fs = require('fs');
 var fcm = require('fcm-notification');
-
-
 var FCM = new fcm('./nearwe-db88e-firebase-adminsdk-92i06-7d33a51877.json');
-
 const { success, error, validation } = require("./responseApi");
+const multer  = require('multer')
+var multerAzure = require('multer-azure')
+var upload = multer({ 
+  storage: multerAzure({
+    account: 'poacdocreport', //The name of the Azure storage account
+    key: 'EP8FxGYIqd4Z8qEqypUNrNcz65IPisC7lXDV7Qi8jyQkfIn4Vk3g+4fX01fVD+CmmtwpWRsKSM/Hn2hcJ35iNg==', //A key listed under Access keys in the storage account pane
+    container: 'reports',  //Any container name, it will be created if it doesn't exist
+    blobPathResolver: function(req, file, callback){
+      var blobPath ="a.jpg"
+      callback(null, blobPath);
+    }
+  })
+})
+
 
 let ts = Date.now();
 function GetRandomId(min, max) {  
@@ -428,30 +435,12 @@ router.post('/likes/post', async (req, res) => {
    
 });
 
-//SubCategories
-router.post('/upload_gambar', upload.single('file'),(req, res) => {
-  /* const stream = getStream(req.file.buffer);
- console.log(stream) */
- 
-/*   
-  var stream = fs.createReadStream(buf).pipe(res);
-  const { BlockBlobClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
-
-const blobUrl = "https://poacdocreport.blob.core.windows.net/reports/reports";
-
-const blockBlobClient = new BlockBlobClient(
-  blobUrl,
-  new StorageSharedKeyCredential("poacdocreport", "EP8FxGYIqd4Z8qEqypUNrNcz65IPisC7lXDV7Qi8jyQkfIn4Vk3g+4fX01fVD+CmmtwpWRsKSM/Hn2hcJ35iNg==")
-);
 
 
-
- blockBlobClient.uploadFile(stream); */
-  
-
-  
+router.post('/upload_gambar', upload.any(), function (req, res, next) {
+  console.log(req.files)
+  res.status(200).send('Uploaded: ' + req.files)
 })
-
 
 router.get('/getSubCategories/:categoryId', async (req, res) => {
 
