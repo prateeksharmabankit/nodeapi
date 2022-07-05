@@ -418,8 +418,58 @@ router.post('/AddWhatIsPost', upload.single("file"), async function (req, res, n
     imageUrl:req.file.url,
 
 })
-const dataToSave = await posts.save();
-        res.json(success("Post saved", { data: null}, res.statusCode))
+try {
+    
+       
+       
+  const dataToSave = await posts.save();
+
+var userTokens = [];
+
+await UserModel.find({},{"token": 1, "_id": 0}).exec(function(err, result) {
+if (err) throw err;
+result.forEach( results => {
+
+if(typeof results.token === 'undefined'){
+ //Variable isn't defined
+ }
+ else
+ {
+  var message = {
+    data: {
+      postId: dataToSave.postId.toString(),
+      title : dataToSave.postType==1?"Genaral question asked":dataToSave.postType==2?"Nearby help":"Urgent Help needed",
+      desc : dataToSave.title,
+      type:dataToSave.categoryId,
+      imgUrl:dataToSave.imageUrl.toString()
+      
+      
+    },
+    
+   
+  };
+   userTokens.push(results.token)
+   FCM.sendToMultipleToken(message, userTokens, function(err, response) {
+    if(err){
+      //  console.log('err--', err);
+    }else {
+        //console.log('response-----', response);
+    }
+ 
+})
+   
+ }
+});
+
+});
+
+ 
+}
+catch (error) {
+ 
+} 
+
+res.json(success("Post saved", { data: "0"}, res.statusCode))
  
 });
 
