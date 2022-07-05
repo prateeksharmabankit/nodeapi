@@ -459,7 +459,7 @@ router.post('/AddWhatIsPost', upload.single("file"), async function (req, res, n
 const dataToSave = await posts.save();
         res.json(success("Post saved", { data: null}, res.statusCode))
  
-})
+});
 
 router.get('/getSubCategories/:categoryId', async (req, res) => {
 
