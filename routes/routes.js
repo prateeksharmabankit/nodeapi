@@ -463,32 +463,12 @@ const dataToSave = await posts.save();
 
 router.get('/getSubCategories/:categoryId', async (req, res) => {
 
-
-  
-
-  
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const categoryId=req.params.categoryId
 
 
   try{
   
-      const data = await SubCategoryModel.find({categoryId:req.params.categoryId});
+      const data = await SubCategoryModel.find({categoryId:Number(categoryId)});
       
      
       res.json(success("Ok", { data: data}, res.statusCode))
