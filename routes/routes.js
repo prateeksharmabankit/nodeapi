@@ -473,6 +473,13 @@ catch (error) {
 res.json(success("Post saved", { data: "0"}, res.statusCode))
  
 });
+router.post('/AddCommentImage', upload.single("file"), async function (req, res, next) {
+  console.log(req.file)
+ 
+
+res.json(success("Image Uploaded", { data:  req.file.url,}, res.statusCode))
+ 
+});
 
 router.get('/getSubCategories/:categoryId', async (req, res) => {
 
