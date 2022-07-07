@@ -173,7 +173,7 @@ router.get('/Posts/GetAllPosts/:userId/:latitude/:longitude', async (req, res) =
          
             students.forEach( result => {
               const unixTime = result.dateTimeStamp;
-              const date = new Date(unixTime*1000);
+              const date = new Date(unixTime);
             result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
             result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
            
@@ -209,7 +209,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
            
               students.forEach( result => {
                 const unixTime = result.dateTimeStamp;
-                const date = new Date(unixTime*1000);
+                const date = new Date(unixTime);
               result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
               result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
              
@@ -223,7 +223,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
   router.get('/Posts/GetAllWhatisPosts/:userId/:latitude/:longitude', async (req, res) => {
     Model.aggregate([
         
-        { $match: { categoryId: "5" }},
+        { $match: { categoryId: "123251" }},
         {
         
               $lookup: {
@@ -246,7 +246,7 @@ router.get('/Posts/GetAllTrendingPosts/:userId/:latitude/:longitude', async (req
            
               students.forEach( result => {
                 const unixTime = result.dateTimeStamp;
-                const date = new Date(unixTime*1000);
+                const date = new Date(unixTime);
               result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
               result.distance=  GetDistance (result.latitude,result.longitude,req.params.latitude,req.params.longitude);
              
@@ -480,6 +480,7 @@ router.post('/AddCommentImage', upload.single("file"), async function (req, res,
 res.json(success("Image Uploaded", { data:  req.file.url,}, res.statusCode))
  
 });
+
 
 router.get('/getSubCategories/:categoryId', async (req, res) => {
 
