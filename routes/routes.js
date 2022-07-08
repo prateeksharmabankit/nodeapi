@@ -593,4 +593,26 @@ router.get('/chats/getMyChats/:userId', async (req, res) => {
     res.json(success("Chats content saved", { data:user}, res.statusCode))
    
   });
+
+  router.get('/chats/getMyChatContent/:chatId', async (req, res) => {
+    const _chatId=req.params.chatId
+    try{
+  
+      const data = await ChatContentModel.find({chatId:_chatId}, function (err, docs) {
+       
+        docs.forEach( result => {
+          const unixTime = result.dateTimeStamp;
+          const date = new Date(unixTime);
+        result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
+       
+    });
+    res.json(success("Ok", { data: docs}, res.statusCode))
+        
+    });
+     
+      
+  }
+  catch(errors){
+      res.json(error(errors, res.statusCode))
+  }});
 module.exports = router;
