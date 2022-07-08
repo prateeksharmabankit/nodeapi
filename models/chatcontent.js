@@ -17,7 +17,7 @@ const chatcontentSchema = new mongoose.Schema({
         type: Number
     },
     chatId:{
-        type: Schema.Types.ObjectId,
+        type: String,
     },
     dateTimeStamp :{
        
