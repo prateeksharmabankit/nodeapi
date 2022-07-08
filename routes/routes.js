@@ -3,16 +3,19 @@ const express = require('express');
 const { getDate } = require('javascript-time-ago/gradation');
 const Model = require('../models/model');
 const UserModel = require('../models/user');
+const ChatModel = require('../models/chat');
 var moment = require('moment');
 var haversine = require("haversine-distance");
 const LikesModel = require('../models/likes');
 const SubCategoryModel = require('../models/subcategories');
+const ChatContentModel = require('../models/chatcontent');
 const router = express.Router();
 var fcm = require('fcm-notification');
 var FCM = new fcm('./nearwe-db88e-firebase-adminsdk-92i06-7d33a51877.json');
 const { success, error, validation } = require("./responseApi");
 const multer  = require('multer')
-var multerAzure = require('multer-azure')
+var multerAzure = require('multer-azure');
+const { exists } = require('../models/model');
 var upload = multer({ 
   storage: multerAzure({
     account: 'poacdocreport', //The name of the Azure storage account
@@ -510,4 +513,84 @@ router.post('/subCategories/post', async (req, res) => {
  
    
 });
+router.post('/chats/post', async (req, res) => { 
+  var user = new ChatModel(req.body)
+  await user.save();
+  res.json(success("Chats Added", { data:user}, res.statusCode))
+ 
+});
+router.get('/chats/getMyChats/:userId', async (req, res) => {
+  const userId=req.params.userId
+  ChatModel.aggregate([
+        {$match: { $or: [{ sender: Number(userId)}, { reciever: Number(userId) }] }},
+   
+    {
+    
+          $lookup: {
+              from: "users", 
+              localField: "sender",
+              foreignField: "userId",
+              as: "senderuser"
+          },
+          
+      },
+      {
+    
+        $lookup: {
+            from: "users", 
+            localField: "reciever",
+            foreignField: "userId",
+            as: "recieveruser"
+        },
+        
+    },
+     {
+    
+      $lookup: {
+          from: "chatcontents", 
+          localField: "_id",
+          foreignField: "chatId",
+          "pipeline":[
+            { $sort : { dateTimeStamp : -1 } },
+            {"$limit":1}
+          ],
+          as: "chatcontent"
+      },
+      
+  }, 
+  
+  {
+    $unwind: '$chatcontent'
+  }
+  ,  
+ 
+      {
+        $unwind: '$senderuser'
+      },
+      {
+        $unwind: '$recieveruser'
+      },
+     
+  ]).exec(function(err, students) {
+    console.log(students)
+          res.json(success("OK", { data: students}, res.statusCode))
+      });
+   /*  try{
+    
+        const data = await ChatModel.find({$or:[{sender:Number(userId)},{reciever:Number(userId)}]});
+        
+       
+        res.json(success("Ok", { data: data}, res.statusCode))
+    }
+    catch(errors){
+        res.json(error(errors, res.statusCode))
+    } */
+  })
+  router.post('/chatcontent/post', async (req, res) => { 
+    var user = new ChatContentModel(req.body)
+    user.dateTimeStamp=new Date(),
+    await user.save();
+    res.json(success("Chats content saved", { data:user}, res.statusCode))
+   
+  });
 module.exports = router;
