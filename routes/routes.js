@@ -572,19 +572,19 @@ router.get('/chats/getMyChats/:userId', async (req, res) => {
       },
      
   ]).exec(function(err, students) {
-    console.log(students)
-          res.json(success("OK", { data: students}, res.statusCode))
+
+    students.forEach( result => {
+      const unixTime = result.chatcontent.dateTimeStamp;
+      const date = new Date(unixTime);
+    result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
+   
+});
+res.json(success("OK", { data: students}, res.statusCode))
+
+
+  
       });
-   /*  try{
-    
-        const data = await ChatModel.find({$or:[{sender:Number(userId)},{reciever:Number(userId)}]});
-        
-       
-        res.json(success("Ok", { data: data}, res.statusCode))
-    }
-    catch(errors){
-        res.json(error(errors, res.statusCode))
-    } */
+  
   })
   router.post('/chatcontent/post', async (req, res) => { 
     var user = new ChatContentModel(req.body)

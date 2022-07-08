@@ -14,6 +14,11 @@ const chatSchema = new mongoose.Schema({
     postId:{
         type: Number
     },
+    ago:{
+        type: String
+    },
+
+    
 
    
 })
