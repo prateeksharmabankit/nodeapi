@@ -515,8 +515,37 @@ router.post('/subCategories/post', async (req, res) => {
 });
 router.post('/chats/post', async (req, res) => { 
   var user = new ChatModel(req.body)
-  await user.save();
-  res.json(success("Chats Added", { data:user}, res.statusCode))
+
+  ChatModel.aggregate([
+    { $match: { postId: Number(user.postId )}},
+ 
+  {$match: { $or: [{ sender: Number(user.sender)}, { reciever: Number(user.sender) }] }},
+      
+  {"$limit":1}
+  ]).exec(function(err, students) {
+
+    console.log(students)
+   
+    if(students==0)
+    {
+      user.save();
+      res.json(success("Chats Added", { data:user}, res.statusCode))
+    }
+    else
+    {
+
+      res.json(success("Chats updated", { data:students[0]}, res.statusCode))
+
+    }
+
+
+
+});
+
+
+
+
+
  
 });
 router.get('/chats/getMyChats/:userId', async (req, res) => {
