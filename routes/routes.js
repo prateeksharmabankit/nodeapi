@@ -627,7 +627,75 @@ res.json(success("OK", { data: students}, res.statusCode))
     const _chatId=req.params.chatId
     try{
   
-      const data = await ChatContentModel.find({chatId:_chatId}, function (err, docs) {
+
+      ChatContentModel.aggregate([
+        
+   
+    {
+    
+          $lookup: {
+              from: "users", 
+              localField: "sender",
+              foreignField: "userId",
+              as: "senderuser"
+          },
+          
+      },
+      {
+    
+        $lookup: {
+            from: "users", 
+            localField: "reciever",
+            foreignField: "userId",
+            as: "recieveruser"
+        },
+        
+    },
+    
+  
+ 
+  
+ 
+      {
+        $unwind: '$senderuser'
+      },
+      {
+        $unwind: '$recieveruser'
+      },
+     
+  ]).exec(function(err, students) {
+
+    students.forEach( result => {
+       const unixTime = result.dateTimeStamp;
+      const date = new Date(unixTime);
+    result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow(); 
+   
+});
+res.json(success("OK", { data: students}, res.statusCode))
+
+
+  
+      });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+     /*  const data = await ChatContentModel.find({chatId:_chatId}, function (err, docs) {
        
         docs.forEach( result => {
           const unixTime = result.dateTimeStamp;
@@ -637,7 +705,7 @@ res.json(success("OK", { data: students}, res.statusCode))
     });
     res.json(success("Ok", { data: docs}, res.statusCode))
         
-    });
+    }); */
      
       
   }
