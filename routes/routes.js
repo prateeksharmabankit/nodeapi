@@ -533,8 +533,8 @@ router.post('/chats/post', async (req, res) => {
     }
     else
     {
-
-      res.json(success("Chats updated", { data:students[0]}, res.statusCode))
+      user=students[0]
+      res.json(success("Chats updated", { data:user}, res.statusCode))
 
     }
 
