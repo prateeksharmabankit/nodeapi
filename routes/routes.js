@@ -1,5 +1,6 @@
 const { json } = require('express');
 const express = require('express');
+
 const { getDate } = require('javascript-time-ago/gradation');
 const Model = require('../models/model');
 const UserModel = require('../models/user');
@@ -16,6 +17,7 @@ const { success, error, validation } = require("./responseApi");
 const multer  = require('multer')
 var multerAzure = require('multer-azure');
 const { exists } = require('../models/model');
+const { Mongoose } = require('mongoose');
 var upload = multer({ 
   storage: multerAzure({
     account: 'poacdocreport', //The name of the Azure storage account
@@ -625,11 +627,13 @@ res.json(success("OK", { data: students}, res.statusCode))
 
   router.get('/chats/getMyChatContent/:chatId', async (req, res) => {
     const _chatId=req.params.chatId
+    var mongoose = require('mongoose')
+ 
     try{
   
 
       ChatContentModel.aggregate([
-        
+        { $match: { chatId:mongoose.Types.ObjectId(_chatId) }},
    
     {
     
@@ -710,6 +714,6 @@ res.json(success("OK", { data: students}, res.statusCode))
       
   }
   catch(errors){
-      res.json(error(errors, res.statusCode))
+      res.json(error(errors.message, res.statusCode))
   }});
 module.exports = router;
