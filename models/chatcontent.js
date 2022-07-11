@@ -9,6 +9,7 @@ const chatcontentSchema = new mongoose.Schema({
     sender:{
         type: Number
     },
+    
    
     ago:{
         type: String
@@ -22,8 +23,10 @@ const chatcontentSchema = new mongoose.Schema({
     dateTimeStamp :{
        
         type: Date
-    }
-    
+    },
+     postId:{
+        type: Number
+    },
   
 
    
