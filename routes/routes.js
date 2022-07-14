@@ -377,7 +377,32 @@ router.get('/User/UpdateToken/:userId/:token', async (req, res) => {
 })
 
 
-//likes Routes
+
+router.post('/User/UpdateProfile', async (req, res) => {
+    
+  var userId = { userId: req.body.userId };
+ 
+    var newvalues = { $set: {name:  req.body.name,image:  req.body.image} };
+    UserModel.findOneAndUpdate( Number(userId), 
+        newvalues, 
+        function(err, response) { 
+           if(err==null)
+           {
+            res.json(success("Profile Updated Successfully", { data: "0"}, res.statusCode))
+           }
+           else
+           {
+            res.json(success("PRofile Updation failed Try Later ", { data: err}, res.statusCode))
+           }
+        },{useFindAndModify: false});
+         
+  
+
+})
+
+
+
+//likes Routes 
 
 router.post('/likes/post', async (req, res) => {
    
@@ -695,21 +720,6 @@ res.json(success("OK", { data: students}, res.statusCode))
 
 
 
-
-
-
-      
-     /*  const data = await ChatContentModel.find({chatId:_chatId}, function (err, docs) {
-       
-        docs.forEach( result => {
-          const unixTime = result.dateTimeStamp;
-          const date = new Date(unixTime);
-        result.ago=moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
-       
-    });
-    res.json(success("Ok", { data: docs}, res.statusCode))
-        
-    }); */
      
       
   }
